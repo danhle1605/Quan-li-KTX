@@ -100,12 +100,12 @@ CREATE TABLE IF NOT EXISTS `room_requests` (
 
 -- Mật khẩu mặc định cho các tài khoản: password123 (hash bcrypt) hoặc '123'
 INSERT INTO `users` (`id`, `username`, `password`, `fullname`, `email`, `role`) VALUES
-(1, 'admin', '$2y$10$szjg2y7E9Gw2wScn6YLn1.LtM.8vI4hzNsfbC1vD5TBnVi00/GwT.', 'Quản Trị Viên KTX UTH', 'admin@uth.edu.vn', 'admin'),
-(2, 'sv2026001', '$2y$10$szjg2y7E9Gw2wScn6YLn1.LtM.8vI4hzNsfbC1vD5TBnVi00/GwT.', 'Nguyễn Văn An', 'nguyenvana@gmail.com', 'student'),
-(3, 'sv2026002', '$2y$10$szjg2y7E9Gw2wScn6YLn1.LtM.8vI4hzNsfbC1vD5TBnVi00/GwT.', 'Trần Thị Bình', 'tranthib@gmail.com', 'student'),
-(4, 'sv2026003', '$2y$10$szjg2y7E9Gw2wScn6YLn1.LtM.8vI4hzNsfbC1vD5TBnVi00/GwT.', 'Đỗ Minh Khang', 'lehoangc@gmail.com', 'student'),
-(5, 'sv2026004', '$2y$10$szjg2y7E9Gw2wScn6YLn1.LtM.8vI4hzNsfbC1vD5TBnVi00/GwT.', 'Phạm Minh Dũng', 'phamminhd@gmail.com', 'student')
-ON DUPLICATE KEY UPDATE `fullname`=VALUES(`fullname`), `password`=VALUES(`password`), `role`=VALUES(`role`);
+(1, 'admin', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1q.uGq928uX/aL6jD3fM8dM6c9nC4y.', 'Quản Trị Viên KTX UTH', 'admin@uth.edu.vn', 'admin'),
+(2, 'sv2026001', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1q.uGq928uX/aL6jD3fM8dM6c9nC4y.', 'Nguyễn Văn An', 'nguyenvana@gmail.com', 'student'),
+(3, 'sv2026002', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1q.uGq928uX/aL6jD3fM8dM6c9nC4y.', 'Trần Thị Bình', 'tranthib@gmail.com', 'student'),
+(4, 'sv2026003', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1q.uGq928uX/aL6jD3fM8dM6c9nC4y.', 'Đỗ Minh Khang', 'lehoangc@gmail.com', 'student'),
+(5, 'sv2026004', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHe1q.uGq928uX/aL6jD3fM8dM6c9nC4y.', 'Phạm Minh Dũng', 'phamminhd@gmail.com', 'student')
+ON DUPLICATE KEY UPDATE `fullname`=VALUES(`fullname`);
 
 -- Chèn danh sách các phòng KTX UTH
 INSERT INTO `rooms` (`id`, `room_number`, `building`, `floor`, `room_type`, `capacity`, `occupied`, `price`, `status`, `description`) VALUES
