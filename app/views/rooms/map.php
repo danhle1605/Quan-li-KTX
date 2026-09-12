@@ -4,12 +4,12 @@
 <main class="container margin-top-20">
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
-            <h2><i class="fa-solid fa-map-location-dot text-primary"></i> Bản Đồ Trạng Thái Phòng Kí Túc Xá (Room Map)</h2>
-            <p class="text-muted">Theo dõi và quản lý các phòng kí túc xá theo từng Tòa nhà thực tế</p>
+            <h2><i class="fa-solid fa-map-location-dot text-primary"></i> Sơ đồ phòng KTX</h2>
+            <p class="text-muted">Theo dõi và quản lý trạng thái các phòng theo từng tòa nhà</p>
         </div>
         <div>
-            <a href="<?= BASE_URL ?>room/smartMatch" class="btn btn-secondary">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Gợi ý phòng Smart
+            <a href="<?= BASE_URL ?>room/smartMatch" class="btn btn-outline">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Smart Match
             </a>
             <a href="<?= BASE_URL ?>room/index" class="btn btn-outline">
                 <i class="fa-solid fa-list"></i> Xem dạng danh sách
@@ -18,12 +18,12 @@
     </div>
 
     <!-- Chú thích màu sắc (Legend) -->
-    <div class="card margin-bottom-20" style="background: #ffffff; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <div style="display: flex; gap: 25px; align-items: center; flex-wrap: wrap;">
+    <div class="card margin-bottom-20" style="background: #ffffff; border-radius: 8px; border: 1px solid var(--border-color); padding: 15px;">
+        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
             <strong><i class="fa-solid fa-circle-info"></i> Chú thích trạng thái:</strong>
-            <span class="badge badge-success" style="padding: 8px 12px; font-size: 14px;"><i class="fa-solid fa-check"></i> Available (Còn chỗ trống)</span>
-            <span class="badge badge-danger" style="padding: 8px 12px; font-size: 14px;"><i class="fa-solid fa-user-group"></i> Full (Đã đầy)</span>
-            <span class="badge badge-secondary" style="padding: 8px 12px; font-size: 14px; background: #64748b;"><i class="fa-solid fa-wrench"></i> Maintenance (Đang bảo trì)</span>
+            <span class="badge badge-success" style="padding: 6px 10px; font-size: 13px;"><i class="fa-solid fa-check"></i> Available (Còn chỗ trống)</span>
+            <span class="badge badge-danger" style="padding: 6px 10px; font-size: 13px;"><i class="fa-solid fa-user-group"></i> Full (Đã đầy)</span>
+            <span class="badge badge-secondary" style="padding: 6px 10px; font-size: 13px; background: #64748b; color: white;"><i class="fa-solid fa-wrench"></i> Maintenance (Đang bảo trì)</span>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
                     <span class="badge badge-info"><?= count($rooms) ?> phòng</span>
                 </div>
 
-                <div class="room-map-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;">
+                <div class="room-map-grid">
                     <?php foreach ($rooms as $r): ?>
                         <?php 
                             $percent = $r['capacity'] > 0 ? min(100, round(($r['occupied'] / $r['capacity']) * 100)) : 0;
@@ -52,27 +52,26 @@
                                 $badgeClass = 'badge-danger';
                             }
                         ?>
-                        <div class="room-card-item btn-view-room-detail <?= $statusClass ?>" data-id="<?= $r['id'] ?>" style="cursor: pointer; background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 6px solid #10b981; transition: transform 0.2s, box-shadow 0.2s;">
+                        <div class="room-card-item btn-view-room-detail <?= $statusClass ?>" data-id="<?= $r['id'] ?>" style="cursor: pointer;">
                             <div class="d-flex justify-content-between align-items-center margin-bottom-10">
-                                <h4 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">
+                                <h4 class="font-weight-bold" style="margin: 0; font-size: 1rem;">
                                     Phòng <?= htmlspecialchars($r['room_number']) ?>
                                 </h4>
                                 <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($r['status']) ?></span>
                             </div>
 
-                            <div style="font-size: 13px; color: #64748b; margin-bottom: 10px;">
-                                <div><i class="fa-solid fa-layer-group"></i> Tầng <?= $r['floor'] ?> | Loại: <strong><?= htmlspecialchars($r['room_type']) ?></strong></div>
-                                <div><i class="fa-solid fa-tag"></i> <strong><?= number_format($r['price'], 0, ',', '.') ?> VNĐ</strong>/tháng</div>
+                            <div class="text-muted margin-bottom-10" style="font-size: 0.8rem;">
+                                <div>Tầng <?= $r['floor'] ?> &nbsp;|&nbsp; <strong><?= htmlspecialchars($r['room_type']) ?></strong></div>
+                                <div><strong class="text-primary"><?= number_format($r['price'], 0, ',', '.') ?> VNĐ</strong>/tháng</div>
                             </div>
 
-                            <!-- Occupancy Progress Bar -->
-                            <div class="occupancy-info margin-top-10">
-                                <div class="d-flex justify-content-between text-muted" style="font-size: 12px; margin-bottom: 4px;">
-                                    <span><i class="fa-solid fa-users"></i> Sức chứa:</span>
+                            <div class="occupancy-info">
+                                <div class="d-flex justify-content-between text-muted" style="font-size: 0.775rem; margin-bottom: 3px;">
+                                    <span>Sức chứa:</span>
                                     <strong><?= $r['occupied'] ?> / <?= $r['capacity'] ?> người</strong>
                                 </div>
-                                <div class="progress-bar-bg" style="background: #e2e8f0; border-radius: 6px; height: 8px; overflow: hidden;">
-                                    <div class="progress-bar-fill" style="width: <?= $percent ?>%; height: 100%; background: <?= $percent >= 100 ? '#ef4444' : ($r['status'] === 'Maintenance' ? '#64748b' : '#10b981') ?>;"></div>
+                                <div class="occ-bar-wrap">
+                                    <div class="occ-bar-fill" style="width: <?= $percent ?>%; background: <?= $percent >= 100 ? '#dc2626' : ($r['status'] === 'Maintenance' ? '#64748b' : '#15803d') ?>;"></div>
                                 </div>
                             </div>
                         </div>
@@ -103,14 +102,6 @@
     </div>
 </div>
 
-<style>
-.border-available { border-left-color: #10b981 !important; }
-.border-full { border-left-color: #ef4444 !important; }
-.border-maintenance { border-left-color: #64748b !important; }
-.room-card-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-}
-</style>
+
 
 <?php require_once APPROOT . '/views/layouts/footer.php'; ?>
