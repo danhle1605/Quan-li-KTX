@@ -121,47 +121,19 @@ class RequestController extends Controller {
 
     public function approve($id = null) {
         $this->requireAdmin();
-        if (!$id) $this->redirect('request/index');
-
-        $req = $this->requestModel->getById($id);
-        if (!$req) {
-            Session::setFlash('error', 'Yêu cầu không tồn tại!');
+        if (!$id) {
             $this->redirect('request/index');
             return;
         }
 
-        if ($req['status'] !== 'Pending') {
-            Session::setFlash('error', 'Yêu cầu này đã được xử lý trước đó!');
-            $this->redirect('request/index');
-            return;
-        }
+        require_once APPROOT . '/services/RoomTransferService.php';
+        $transferService = new RoomTransferService();
+        $result = $transferService->approveTransfer((int)$id);
 
-        // Kiểm tra phòng mới có đủ chỗ không
-        $requestedRoom = $this->roomModel->getById($req['requested_room_id']);
-        if (!$requestedRoom || $requestedRoom['status'] === 'Maintenance' || $requestedRoom['occupied'] >= $requestedRoom['capacity']) {
-            Session::setFlash('error', 'Không thể duyệt! Phòng ' . ($requestedRoom['room_number'] ?? '') . ' đã đầy hoặc đang bảo trì.');
-            $this->redirect('request/index');
-            return;
-        }
-
-        $oldRoomId = $req['current_room_id'];
-        $newRoomId = $req['requested_room_id'];
-        $studentId = $req['student_id'];
-
-        // Cập nhật room_id cho sinh viên
-        if ($this->studentModel->updateRoomId($studentId, $newRoomId)) {
-            // Cập nhật lại số lượng occupied và status cho cả phòng cũ và phòng mới
-            if ($oldRoomId) {
-                $this->roomModel->updateOccupiedCount($oldRoomId);
-            }
-            $this->roomModel->updateOccupiedCount($newRoomId);
-
-            // Đổi trạng thái yêu cầu sang Approved
-            $this->requestModel->updateStatus($id, 'Approved');
-
-            Session::setFlash('success', 'Đã duyệt yêu cầu chuyển phòng cho sinh viên ' . $req['student_name'] . ' sang phòng ' . $requestedRoom['room_number'] . '!');
+        if ($result['success']) {
+            Session::setFlash('success', $result['message']);
         } else {
-            Session::setFlash('error', 'Có lỗi xảy ra khi cập nhật phòng cho sinh viên.');
+            Session::setFlash('error', $result['message']);
         }
 
         $this->redirect('request/index');
