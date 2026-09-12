@@ -4,18 +4,18 @@
 <main class="container margin-top-20">
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
-            <h2><i class="fa-solid fa-right-left text-primary"></i> Quản Lý Yêu Cầu Chuyển / Đăng Ký Phòng</h2>
-            <p class="text-muted">Xem xét, duyệt hoặc từ chối các yêu cầu chuyển đổi phòng kí túc xá của sinh viên</p>
+            <h2><i class="fa-solid fa-right-left text-primary"></i> Quản lý yêu cầu phòng</h2>
+            <p class="text-muted">Xem xét, duyệt hoặc từ chối yêu cầu chuyển/đăng ký phòng của sinh viên</p>
         </div>
         <div>
-            <span class="badge badge-warning" style="font-size: 14px; padding: 10px 15px;">
-                <i class="fa-solid fa-clock"></i> <?= $pendingCount ?? 0 ?> yêu cầu đang chờ duyệt
+            <span class="badge badge-warning">
+                <i class="fa-solid fa-clock"></i> <?= $pendingCount ?? 0 ?> yêu cầu chờ duyệt
             </span>
         </div>
     </div>
 
     <!-- Bộ lọc & Tìm kiếm -->
-    <div class="card margin-bottom-20" style="background: #fff; padding: 15px; border-radius: 12px;">
+    <div class="filter-card card-box margin-bottom-20">
         <form action="<?= BASE_URL ?>request/index" method="GET" class="filter-form d-flex gap-3">
             <div class="form-group flex-grow-1" style="margin: 0;">
                 <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo tên SV, MSSV, số phòng..." value="<?= htmlspecialchars($keyword ?? '') ?>">
@@ -34,8 +34,8 @@
     </div>
 
     <!-- Bảng danh sách Yêu cầu -->
-    <div class="card" style="background: #fff; border-radius: 12px; overflow: hidden; padding: 0;">
-        <table class="table" style="margin: 0;">
+    <div class="card-box margin-top-20 table-responsive">
+        <table class="table">
             <thead>
                 <tr style="background: #f8fafc;">
                     <th>#ID</th>
