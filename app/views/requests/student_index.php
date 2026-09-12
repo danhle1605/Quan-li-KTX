@@ -14,10 +14,10 @@
         </div>
     </div>
 
-    <div class="card" style="background: #fff; border-radius: 12px; overflow: hidden; padding: 0;">
-        <table class="table" style="margin: 0;">
+    <div class="card-box table-responsive">
+        <table class="table">
             <thead>
-                <tr style="background: #f8fafc;">
+                <tr>
                     <th>Mã Yêu Cầu</th>
                     <th>Phòng Hiện Tại</th>
                     <th>Phòng Mong Muốn</th>
