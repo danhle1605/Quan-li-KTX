@@ -7,10 +7,10 @@
         <p class="text-muted">Chọn phòng kí túc xá bạn muốn chuyển đến và cung cấp lý do cho Ban Quản Lý KTX</p>
     </div>
 
-    <div class="card" style="background: #ffffff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <div class="card-box">
         <form action="<?= BASE_URL ?>request/create" method="POST">
             <!-- Thông tin sinh viên -->
-            <div class="form-group margin-bottom-20" style="background: #f8fafc; padding: 15px; border-radius: 10px;">
+            <div class="form-group margin-bottom-20" style="background: var(--bg-subtle); padding: 15px; border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
                 <label class="form-label"><strong>Sinh viên gửi yêu cầu:</strong></label>
                 <div>
                     <strong><?= htmlspecialchars($student['fullname'] ?? Session::get('user_name')) ?></strong> 
@@ -25,7 +25,7 @@
             <!-- Chọn phòng muốn chuyển đến -->
             <div class="form-group margin-bottom-20">
                 <label class="form-label"><strong>Chọn phòng muốn chuyển / đăng ký (*):</strong></label>
-                <select name="requested_room_id" class="form-control" required style="font-size: 15px; padding: 10px;">
+                <select name="requested_room_id" class="form-control" required>
                     <option value="">-- Chọn phòng còn chỗ trống --</option>
                     <?php if (!empty($availableRooms)): ?>
                         <?php foreach ($availableRooms as $r): ?>
@@ -44,14 +44,14 @@
             <!-- Lý do chuyển phòng -->
             <div class="form-group margin-bottom-25">
                 <label class="form-label"><strong>Lý do chuyển phòng / nguyện vọng (*):</strong></label>
-                <textarea name="reason" class="form-control" rows="4" placeholder="Nhập lý do cụ thể (Ví dụ: Muốn ở cùng bạn học lớp CNTT, phòng cũ khá xa cầu thang,...)" required style="padding: 12px;"></textarea>
+                <textarea name="reason" class="form-control" rows="4" placeholder="Nhập lý do cụ thể (Ví dụ: Muốn ở cùng bạn học lớp CNTT...)" required></textarea>
             </div>
 
             <div class="d-flex justify-content-between align-items-center">
                 <a href="<?= BASE_URL ?>request/index" class="btn btn-outline">
                     <i class="fa-solid fa-arrow-left"></i> Quay lại
                 </a>
-                <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">
+                <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-paper-plane"></i> Gửi Yêu Cầu Chuyển Phòng
                 </button>
             </div>
