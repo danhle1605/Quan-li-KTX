@@ -4,10 +4,10 @@
 <main class="page-container container">
     <div class="page-header">
         <div>
-            <h1><i class="fa-solid fa-user-plus"></i> Thêm Sinh Viên Mới</h1>
-            <p>Nhập thông tin sinh viên cư trú kí túc xá</p>
+            <h2><i class="fa-solid fa-user-plus"></i> Thêm Sinh Viên Mới</h2>
+            <p class="text-muted">Nhập thông tin sinh viên cư trú kí túc xá</p>
         </div>
-        <a href="<?= BASE_URL ?>student/index" class="btn btn-secondary">
+        <a href="<?= BASE_URL ?>student/index" class="btn btn-outline">
             <i class="fa-solid fa-arrow-left"></i> Quay lại
         </a>
     </div>
@@ -99,10 +99,10 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-success btn-lg">
+                <button type="submit" class="btn btn-primary btn-lg">
                     <i class="fa-solid fa-floppy-disk"></i> Lưu Sinh Viên
                 </button>
-                <a href="<?= BASE_URL ?>student/index" class="btn btn-secondary btn-lg">Hủy bỏ</a>
+                <a href="<?= BASE_URL ?>student/index" class="btn btn-outline btn-lg">Hủy bỏ</a>
             </div>
         </form>
     </div>
