@@ -4,12 +4,12 @@
 <main class="page-container container">
     <div class="page-header">
         <div>
-            <h1><i class="fa-solid fa-user-graduate"></i> Quản Lý Sinh Viên</h1>
-            <p>Danh sách sinh viên cư trú kí túc xá (Hỗ trợ Tìm kiếm & Phân trang AJAX REST API)</p>
+            <h1><i class="fa-solid fa-user-graduate"></i> Quản lý sinh viên</h1>
+            <p class="text-muted">Danh sách sinh viên cư trú ký túc xá</p>
         </div>
         <div>
-            <a href="<?= BASE_URL ?>student/create" class="btn btn-success">
-                <i class="fa-solid fa-user-plus"></i> Thêm Sinh Viên
+            <a href="<?= BASE_URL ?>student/create" class="btn btn-primary">
+                <i class="fa-solid fa-user-plus"></i> Thêm sinh viên
             </a>
         </div>
     </div>
@@ -85,11 +85,11 @@
                                 </td>
                                 <td><?= htmlspecialchars($student['phone']) ?></td>
                                 <td class="table-actions">
-                                    <button class="btn btn-sm btn-info btn-view-student" 
+                                    <button class="btn btn-sm btn-outline btn-view-student" 
                                             data-student='<?= json_encode($student, JSON_HEX_APOS | JSON_HEX_QUOT) ?>'>
                                         <i class="fa-solid fa-eye"></i>
                                     </button>
-                                    <a href="<?= BASE_URL ?>student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-warning">
+                                    <a href="<?= BASE_URL ?>student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-outline">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     <a href="<?= BASE_URL ?>student/delete/<?= $student['id'] ?>" 
@@ -110,21 +110,41 @@
 
         <!-- Phân trang Pagination -->
         <div class="pagination-container" id="paginationWrapper">
-            <?php if ($totalPages > 1): ?>
+            <?php if (!empty($totalPages) && $totalPages > 1): ?>
                 <ul class="pagination">
-                    <?php if ($page > 1): ?>
-                        <li><a href="<?= BASE_URL ?>student/index?page=<?= $page - 1 ?>&search=<?= urlencode($keyword) ?>&room_id=<?= $roomId ?>">&laquo; Trước</a></li>
-                    <?php endif; ?>
+                    <li class="page-item page-nav page-prev <?= ($page <= 1) ? 'disabled' : '' ?>">
+                        <?php if ($page > 1): ?>
+                            <a class="page-link" href="<?= BASE_URL ?>student/index?page=<?= $page - 1 ?>&search=<?= urlencode($keyword ?? '') ?>&room_id=<?= $roomId ?? '' ?>">
+                                <i class="fa-solid fa-arrow-left"></i> Trước
+                            </a>
+                        <?php else: ?>
+                            <span class="page-link disabled">
+                                <i class="fa-solid fa-arrow-left"></i> Trước
+                            </span>
+                        <?php endif; ?>
+                    </li>
 
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                        <li class="<?= $i == $page ? 'active' : '' ?>">
-                            <a href="<?= BASE_URL ?>student/index?page=<?= $i ?>&search=<?= urlencode($keyword) ?>&room_id=<?= $roomId ?>"><?= $i ?></a>
+                        <li class="page-item page-number <?= $i == $page ? 'active' : '' ?>">
+                            <?php if ($i == $page): ?>
+                                <span class="page-link"><?= $i ?></span>
+                            <?php else: ?>
+                                <a class="page-link" href="<?= BASE_URL ?>student/index?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&room_id=<?= $roomId ?? '' ?>"><?= $i ?></a>
+                            <?php endif; ?>
                         </li>
                     <?php endfor; ?>
 
-                    <?php if ($page < $totalPages): ?>
-                        <li><a href="<?= BASE_URL ?>student/index?page=<?= $page + 1 ?>&search=<?= urlencode($keyword) ?>&room_id=<?= $roomId ?>">Sau &raquo;</a></li>
-                    <?php endif; ?>
+                    <li class="page-item page-nav page-next <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                        <?php if ($page < $totalPages): ?>
+                            <a class="page-link" href="<?= BASE_URL ?>student/index?page=<?= $page + 1 ?>&search=<?= urlencode($keyword ?? '') ?>&room_id=<?= $roomId ?? '' ?>">
+                                Sau <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="page-link disabled">
+                                Sau <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+                        <?php endif; ?>
+                    </li>
                 </ul>
             <?php endif; ?>
         </div>
