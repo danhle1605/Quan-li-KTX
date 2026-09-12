@@ -9,10 +9,10 @@
         </div>
         <div class="header-actions d-flex gap-2">
             <a href="<?= BASE_URL ?>room/map" class="btn btn-outline">
-                <i class="fa-solid fa-map-location-dot"></i> Xem Dạng Bản Đồ (Room Map)
+                <i class="fa-solid fa-map-location-dot"></i> Xem dạng bản đồ (Room Map)
             </a>
-            <a href="<?= BASE_URL ?>room/smartMatch" class="btn btn-indigo">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Gợi Ý Phòng Smart Match
+            <a href="<?= BASE_URL ?>room/smartMatch" class="btn btn-outline">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Smart Match
             </a>
             <?php if (Session::get('user_role') === 'admin'): ?>
                 <a href="<?= BASE_URL ?>room/create" class="btn btn-primary">
@@ -62,44 +62,44 @@
     </div>
 
     <!-- Danh sách phòng ở dạng Grid Cards -->
-    <div class="rooms-grid margin-top-20" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+    <div class="rooms-grid margin-top-20">
         <?php if (!empty($rooms)): ?>
             <?php foreach ($rooms as $room): ?>
-                <div class="room-card card-box" style="background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="room-card card-box d-flex flex-column justify-content-between">
                     <div>
                         <div class="room-card-header d-flex justify-content-between align-items-center margin-bottom-10">
-                            <span class="room-number" style="font-size: 20px; font-weight: 700; color: #1e293b;">Phòng <?= htmlspecialchars($room['room_number']) ?></span>
+                            <span class="room-number font-weight-bold" style="font-size: 1.1rem;">Phòng <?= htmlspecialchars($room['room_number']) ?></span>
                             <span class="badge <?= $room['status'] === 'Available' ? 'badge-success' : ($room['status'] === 'Full' ? 'badge-danger' : 'badge-secondary') ?>">
                                 <?= $room['status'] === 'Available' ? 'Còn ' . ($room['capacity'] - $room['occupied']) . ' chỗ' : ($room['status'] === 'Full' ? 'Đã đầy' : 'Bảo trì') ?>
                             </span>
                         </div>
 
-                        <div class="room-card-body" style="font-size: 14px; color: #475569;">
-                            <p style="margin-bottom: 6px;"><i class="fa-solid fa-building text-muted"></i> <?= htmlspecialchars($room['building']) ?> - Tầng <?= htmlspecialchars($room['floor'] ?? 1) ?></p>
-                            <p style="margin-bottom: 6px;"><i class="fa-solid fa-tag text-muted"></i> Loại: <strong><?= htmlspecialchars($room['room_type'] ?? 'Thường') ?></strong></p>
-                            <p style="margin-bottom: 12px;" class="text-primary font-weight-bold"><i class="fa-solid fa-money-bill-wave"></i> <?= number_format($room['price'], 0, ',', '.') ?> VNĐ / tháng</p>
+                        <div class="room-card-body">
+                            <p class="margin-bottom-5"><i class="fa-solid fa-building text-muted"></i> Tòa <?= htmlspecialchars($room['building']) ?> - Tầng <?= htmlspecialchars($room['floor'] ?? 1) ?></p>
+                            <p class="margin-bottom-5"><i class="fa-solid fa-tag text-muted"></i> Loại: <strong><?= htmlspecialchars($room['room_type'] ?? 'Thường') ?></strong></p>
+                            <p class="margin-bottom-10 text-primary font-weight-bold"><i class="fa-solid fa-money-bill-wave"></i> <?= number_format($room['price'], 0, ',', '.') ?> VNĐ / tháng</p>
                             
                             <div class="room-occupancy margin-top-10">
-                                <div class="d-flex justify-content-between text-muted" style="font-size: 12px; margin-bottom: 4px;">
+                                <div class="d-flex justify-content-between text-muted" style="font-size: 0.775rem; margin-bottom: 3px;">
                                     <span>Sức chứa:</span>
                                     <strong><?= $room['occupied'] ?> / <?= $room['capacity'] ?> sinh viên</strong>
                                 </div>
-                                <div class="mini-progress-bar" style="background: #e2e8f0; border-radius: 6px; height: 8px; overflow: hidden;">
-                                    <div class="bar-fill" style="height: 100%; width: <?= round(($room['occupied'] / $room['capacity']) * 100) ?>%; background: <?= $room['status'] === 'Maintenance' ? '#64748b' : ($room['occupied'] >= $room['capacity'] ? '#ef4444' : '#10b981') ?>;"></div>
+                                <div class="occ-bar-wrap">
+                                    <div class="occ-bar-fill" style="width: <?= round(($room['occupied'] / $room['capacity']) * 100) ?>%; background: <?= $room['status'] === 'Maintenance' ? '#64748b' : ($room['occupied'] >= $room['capacity'] ? '#dc2626' : '#15803d') ?>;"></div>
                                 </div>
                             </div>
-                            <p class="room-desc margin-top-12 text-muted" style="font-size: 13px; line-height: 1.4;"><?= htmlspecialchars($room['description'] ?? 'Chưa có mô tả.') ?></p>
+                            <p class="room-desc margin-top-10 text-muted" style="font-size: 0.8rem; line-height: 1.35;"><?= htmlspecialchars($room['description'] ?? 'Chưa có mô tả.') ?></p>
                         </div>
                     </div>
 
-                    <div class="room-card-footer margin-top-15 d-flex justify-content-between align-items-center" style="border-top: 1px solid #f1f5f9; padding-top: 12px;">
-                        <button class="btn btn-sm btn-info btn-view-room-detail" data-id="<?= $room['id'] ?>">
+                    <div class="room-card-footer margin-top-15 d-flex justify-content-between align-items-center" style="border-top: 1px solid var(--border-light); padding-top: 10px;">
+                        <button class="btn btn-sm btn-outline btn-view-room-detail" data-id="<?= $room['id'] ?>">
                             <i class="fa-solid fa-eye"></i> Chi tiết
                         </button>
                         
                         <?php if (Session::get('user_role') === 'admin'): ?>
-                            <div>
-                                <a href="<?= BASE_URL ?>room/edit/<?= $room['id'] ?>" class="btn btn-sm btn-warning" title="Sửa phòng">
+                            <div class="d-flex gap-2">
+                                <a href="<?= BASE_URL ?>room/edit/<?= $room['id'] ?>" class="btn btn-sm btn-outline" title="Sửa phòng">
                                     <i class="fa-solid fa-pen-to-square"></i> Sửa
                                 </a>
                                 <a href="<?= BASE_URL ?>room/delete/<?= $room['id'] ?>" class="btn btn-sm btn-danger btn-delete-confirm" title="Xóa phòng">
@@ -119,7 +119,7 @@
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="no-data card-box w-100 text-center py-5" style="grid-column: 1 / -1; background: #fff; border-radius: 12px;">
+            <div class="no-data card-box w-100 text-center py-5" style="grid-column: 1 / -1;">
                 <p class="text-muted"><i class="fa-solid fa-circle-exclamation fa-2x margin-bottom-10"></i><br>Không tìm thấy phòng kí túc xá nào khớp với điều kiện tìm kiếm.</p>
             </div>
         <?php endif; ?>
@@ -129,11 +129,39 @@
     <div class="pagination-container margin-top-30 text-center">
         <?php if (!empty($totalPages) && $totalPages > 1): ?>
             <ul class="pagination">
+                <li class="page-item page-nav page-prev <?= ($page <= 1) ? 'disabled' : '' ?>">
+                    <?php if ($page > 1): ?>
+                        <a class="page-link" href="<?= BASE_URL ?>room/index?page=<?= $page - 1 ?>&search=<?= urlencode($keyword ?? '') ?>&building=<?= urlencode($building ?? '') ?>&status=<?= urlencode($status ?? '') ?>">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </a>
+                    <?php else: ?>
+                        <span class="page-link disabled">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </span>
+                    <?php endif; ?>
+                </li>
+
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <li class="<?= $i == $page ? 'active' : '' ?>">
-                        <a href="<?= BASE_URL ?>room/index?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&building=<?= urlencode($building ?? '') ?>&status=<?= urlencode($status ?? '') ?>"><?= $i ?></a>
+                    <li class="page-item page-number <?= $i == $page ? 'active' : '' ?>">
+                        <?php if ($i == $page): ?>
+                            <span class="page-link"><?= $i ?></span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= BASE_URL ?>room/index?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&building=<?= urlencode($building ?? '') ?>&status=<?= urlencode($status ?? '') ?>"><?= $i ?></a>
+                        <?php endif; ?>
                     </li>
                 <?php endfor; ?>
+
+                <li class="page-item page-nav page-next <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                    <?php if ($page < $totalPages): ?>
+                        <a class="page-link" href="<?= BASE_URL ?>room/index?page=<?= $page + 1 ?>&search=<?= urlencode($keyword ?? '') ?>&building=<?= urlencode($building ?? '') ?>&status=<?= urlencode($status ?? '') ?>">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-link disabled">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    <?php endif; ?>
+                </li>
             </ul>
         <?php endif; ?>
     </div>
