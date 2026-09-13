@@ -4,10 +4,10 @@
 <main class="page-container container">
     <div class="page-header">
         <div>
-            <h1><i class="fa-solid fa-file-circle-plus"></i> Lập Hóa Đơn Tiền Phòng & Điện Nước</h1>
-            <p>Tính tổng tiền điện, tiền nước và phí dịch vụ phòng ở KTX</p>
+            <h2><i class="fa-solid fa-file-circle-plus"></i> Lập Hóa Đơn Tiền Phòng & Điện Nước</h2>
+            <p class="text-muted">Tính tổng tiền điện, tiền nước và phí dịch vụ phòng ở KTX</p>
         </div>
-        <a href="<?= BASE_URL ?>payment/index" class="btn btn-secondary">
+        <a href="<?= BASE_URL ?>payment/index" class="btn btn-outline">
             <i class="fa-solid fa-arrow-left"></i> Quay lại
         </a>
     </div>
@@ -62,16 +62,11 @@
                 </select>
             </div>
 
-            <div class="invoice-total margin-top-20">
-                <span>Tổng tiền hóa đơn</span>
-                <strong id="invoiceTotal">0 VNĐ</strong>
-            </div>
-
             <div class="form-actions margin-top-25">
                 <button type="submit" class="btn btn-primary btn-lg">
                     <i class="fa-solid fa-floppy-disk"></i> Tạo & Xuất Hóa Đơn
                 </button>
-                <a href="<?= BASE_URL ?>payment/index" class="btn btn-secondary btn-lg">Hủy bỏ</a>
+                <a href="<?= BASE_URL ?>payment/index" class="btn btn-outline btn-lg">Hủy bỏ</a>
             </div>
         </form>
     </div>

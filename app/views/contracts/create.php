@@ -4,10 +4,10 @@
 <main class="page-container container">
     <div class="page-header">
         <div>
-            <h1><i class="fa-solid fa-file-signature"></i> Tạo Hợp Đồng Kí Túc Xá Mới</h1>
-            <p>Thiết lập thông tin sinh viên, chọn phòng và quy định thời hạn ở KTX</p>
+            <h2><i class="fa-solid fa-file-signature"></i> Tạo Hợp Đồng Kí Túc Xá Mới</h2>
+            <p class="text-muted">Thiết lập thông tin sinh viên, chọn phòng và quy định thời hạn ở KTX</p>
         </div>
-        <a href="<?= BASE_URL ?>contract/index" class="btn btn-secondary">
+        <a href="<?= BASE_URL ?>contract/index" class="btn btn-outline">
             <i class="fa-solid fa-arrow-left"></i> Quay lại
         </a>
     </div>
