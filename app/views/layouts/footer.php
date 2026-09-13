@@ -2,7 +2,7 @@
 
 <footer class="main-footer">
     <div class="footer-container">
-        <p>&copy; <?= date('Y') ?> <strong>Hệ thống Quản lý KTX UTH - Trường ĐH Giao thông vận tải TP.HCM</strong>. PHP MVC + MySQL + jQuery + Docker.</p>
+        <p>&copy; <?= date('Y') ?> <strong>Hệ thống Quản lý KTX UTH - Trường ĐH Giao thông vận tải TP.HCM</strong>.</p>
     </div>
 </footer>
 
