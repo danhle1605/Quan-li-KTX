@@ -4,11 +4,10 @@
             <i class="fa-solid fa-building-user"></i>
             <div class="brand-text">
                 <span class="brand-title">KTX UTH</span>
-                <span class="brand-subtitle">SMART</span>
             </div>
         </a>
 
-        <button class="mobile-toggle" id="mobileMenuBtn">
+        <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation">
             <i class="fa-solid fa-bars"></i>
         </button>
 
@@ -25,8 +24,8 @@
                 <i class="fa-solid fa-map-location-dot"></i> Sơ đồ phòng
             </a>
 
-            <a href="<?= BASE_URL ?>room/smartMatch" class="nav-item <?= strpos($_SERVER['REQUEST_URI'], 'smartMatch') !== false ? 'active' : '' ?>" style="color: #6366f1; font-weight: 600;">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Gợi ý Smart
+            <a href="<?= BASE_URL ?>room/smartMatch" class="nav-item <?= strpos($_SERVER['REQUEST_URI'], 'smartMatch') !== false ? 'active' : '' ?>">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Smart Match
             </a>
 
             <?php if (Session::get('user_role') === 'admin'): ?>
