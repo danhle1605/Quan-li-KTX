@@ -26,7 +26,7 @@ class User extends Model {
         $user = $stmt->fetch();
 
         if ($user) {
-            if (password_verify($password, $user['password']) || $password === '123' || $password === 'password123') {
+            if (password_verify($password, $user['password'])) {
                 return $user;
             }
         }
