@@ -139,9 +139,17 @@ class ContractController extends Controller {
     public function edit($id = null) {
         $this->requireAdmin();
 
-        if (!$id) $this->redirect('contract/index');
+        if (!$id) {
+            $this->redirect('contract/index');
+            return;
+        }
+
         $contract = $this->contractModel->getById($id);
-        if (!$contract) $this->redirect('contract/index');
+        if (!$contract) {
+            Session::setFlash('error', 'Hợp đồng không tồn tại trong hệ thống!');
+            $this->redirect('contract/index');
+            return;
+        }
 
         $students = $this->studentModel->getAll('', null, 1, 300)['data'];
         $rooms = $this->roomModel->getAll('', 1, 200)['data'];
@@ -150,23 +158,66 @@ class ContractController extends Controller {
             $data = Validator::sanitize($_POST);
 
             if (empty($data['student_id']) || empty($data['room_id']) || empty($data['start_date']) || empty($data['end_date'])) {
-                Session::setFlash('error', 'Vui lòng điền đầy đủ các trường bắt buộc!');
+                Session::setFlash('error', 'Vui lòng điền đầy đủ các trường thông tin bắt buộc (*)!');
                 $this->view('contracts/edit', ['contract' => array_merge($contract, $data), 'students' => $students, 'rooms' => $rooms]);
                 return;
             }
 
-            $oldRoomId = $contract['room_id'];
+            if ($data['start_date'] > $data['end_date']) {
+                Session::setFlash('error', 'Ngày bắt đầu hợp đồng không thể sau ngày kết thúc!');
+                $this->view('contracts/edit', ['contract' => array_merge($contract, $data), 'students' => $students, 'rooms' => $rooms]);
+                return;
+            }
+
+            $oldRoomId = (int)$contract['room_id'];
+            $newRoomId = (int)$data['room_id'];
+
+            // Nếu người dùng thay đổi phòng, phải kiểm tra sức chứa và trạng thái phòng mới
+            if ($oldRoomId !== $newRoomId) {
+                $newRoom = $this->roomModel->getById($newRoomId);
+                if (!$newRoom) {
+                    Session::setFlash('error', 'Phòng mới được chọn không tồn tại!');
+                    $this->view('contracts/edit', ['contract' => array_merge($contract, $data), 'students' => $students, 'rooms' => $rooms]);
+                    return;
+                }
+
+                if ($newRoom['status'] === 'Maintenance') {
+                    Session::setFlash('error', 'Không thể chuyển sang phòng ' . htmlspecialchars($newRoom['room_number']) . ' vì phòng đang bảo trì!');
+                    $this->view('contracts/edit', ['contract' => array_merge($contract, $data), 'students' => $students, 'rooms' => $rooms]);
+                    return;
+                }
+
+                if ($newRoom['occupied'] >= $newRoom['capacity']) {
+                    Session::setFlash('error', 'Không thể chuyển sang phòng ' . htmlspecialchars($newRoom['room_number']) . ' vì phòng đã đủ sức chứa (' . $newRoom['occupied'] . '/' . $newRoom['capacity'] . ' sinh viên)!');
+                    $this->view('contracts/edit', ['contract' => array_merge($contract, $data), 'students' => $students, 'rooms' => $rooms]);
+                    return;
+                }
+            }
 
             if ($this->contractModel->update($id, $data)) {
-                if ($oldRoomId != $data['room_id']) {
-                    $this->studentModel->updateRoomId($data['student_id'], $data['room_id']);
+                // Chỉ điều chuyển sinh viên và cập nhật số lượng khi thực sự thay đổi phòng
+                if ($oldRoomId !== $newRoomId) {
+                    $this->studentModel->updateRoomId($data['student_id'], $newRoomId);
                     $this->roomModel->updateOccupiedCount($oldRoomId);
-                    $this->roomModel->updateOccupiedCount($data['room_id']);
+                    $this->roomModel->updateOccupiedCount($newRoomId);
                 }
-                Session::setFlash('success', 'Cập nhật hợp đồng thành công!');
+
+                // Nếu hợp đồng chuyển sang trạng thái Cancelled hoặc Expired -> Giải phóng phòng cho sinh viên
+                if ($data['status'] === 'Cancelled' || $data['status'] === 'Expired') {
+                    $currentStudent = $this->studentModel->getById($data['student_id']);
+                    if ($currentStudent && ($currentStudent['room_id'] == $newRoomId || $currentStudent['room_id'] == $oldRoomId)) {
+                        $this->studentModel->updateRoomId($data['student_id'], null);
+                        $this->roomModel->updateOccupiedCount($newRoomId);
+                        if ($oldRoomId !== $newRoomId) {
+                            $this->roomModel->updateOccupiedCount($oldRoomId);
+                        }
+                    }
+                }
+
+                Session::setFlash('success', 'Cập nhật và gia hạn hợp đồng thành công!');
                 $this->redirect('contract/index');
             } else {
-                Session::setFlash('error', 'Cập nhật hợp đồng thất bại!');
+                Session::setFlash('error', 'Cập nhật hợp đồng thất bại. Vui lòng thử lại!');
                 $this->view('contracts/edit', ['contract' => array_merge($contract, $data), 'students' => $students, 'rooms' => $rooms]);
             }
         } else {
@@ -194,10 +245,24 @@ class ContractController extends Controller {
         $this->requireAdmin();
 
         if ($id) {
-            if ($this->contractModel->cancel($id)) {
-                Session::setFlash('success', 'Đã hủy hợp đồng ở kí túc xá.');
+            $contract = $this->contractModel->getById($id);
+            if ($contract) {
+                if ($this->contractModel->cancel($id)) {
+                    // Giải phóng room_id của sinh viên khi hợp đồng bị hủy
+                    $studentId = $contract['student_id'];
+                    $roomId = $contract['room_id'];
+                    $student = $this->studentModel->getById($studentId);
+                    if ($student && $student['room_id'] == $roomId) {
+                        $this->studentModel->updateRoomId($studentId, null);
+                    }
+                    // Cập nhật lại số người ở của phòng
+                    $this->roomModel->updateOccupiedCount($roomId);
+                    Session::setFlash('success', 'Đã hủy hợp đồng ở kí túc xá và trả phòng thành công.');
+                } else {
+                    Session::setFlash('error', 'Không thể hủy hợp đồng này.');
+                }
             } else {
-                Session::setFlash('error', 'Không thể hủy hợp đồng này.');
+                Session::setFlash('error', 'Hợp đồng không tồn tại.');
             }
         }
         $this->redirect('contract/index');
@@ -210,9 +275,15 @@ class ContractController extends Controller {
             $contract = $this->contractModel->getById($id);
             if ($contract) {
                 $roomId = $contract['room_id'];
+                $studentId = $contract['student_id'];
                 if ($this->contractModel->delete($id)) {
+                    // Giải phóng room_id của sinh viên nếu đang ở phòng này
+                    $student = $this->studentModel->getById($studentId);
+                    if ($student && $student['room_id'] == $roomId) {
+                        $this->studentModel->updateRoomId($studentId, null);
+                    }
                     $this->roomModel->updateOccupiedCount($roomId);
-                    Session::setFlash('success', 'Xóa hợp đồng thành công!');
+                    Session::setFlash('success', 'Xóa hợp đồng và cập nhật phòng thành công!');
                 }
             }
         }
