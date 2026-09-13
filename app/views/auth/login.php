@@ -27,7 +27,7 @@
                 <label class="custom-checkbox">
                     <input type="checkbox" name="remember" value="1">
                     <span class="checkmark"></span>
-                    Ghi nhớ đăng nhập (Cookie Remember Me)
+                    Ghi nhớ đăng nhập
                 </label>
             </div>
 
@@ -37,12 +37,6 @@
 
             <div class="auth-footer">
                 Chưa có tài khoản? <a href="<?= BASE_URL ?>auth/register">Đăng ký ngay</a>
-            </div>
-
-            <div class="auth-demo-info">
-                <p><strong>Tài khoản thử nghiệm UTH:</strong></p>
-                <p>Admin: <code>admin</code> / Mật khẩu: <code>password123</code> hoặc <code>123</code></p>
-                <p>Sinh viên: <code>sv2026001</code> / Mật khẩu: <code>password123</code> hoặc <code>123</code></p>
             </div>
         </form>
     </div>
