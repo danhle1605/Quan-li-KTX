@@ -4,13 +4,13 @@
 <main class="page-container container">
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
-            <h1><i class="fa-solid fa-file-contract text-primary"></i> Quản Lý Hợp Đồng Ở Kí Túc Xá UTH</h1>
-            <p class="text-muted">Danh sách hợp đồng ở, thời hạn, tiền cọc và theo dõi trạng thái gia hạn hợp đồng</p>
+            <h1><i class="fa-solid fa-file-contract text-primary"></i> Quản lý hợp đồng</h1>
+            <p class="text-muted">Danh sách hợp đồng ở, thời hạn, tiền cọc và trạng thái</p>
         </div>
         <div>
             <?php if (Session::get('user_role') === 'admin'): ?>
                 <a href="<?= BASE_URL ?>contract/create" class="btn btn-primary">
-                    <i class="fa-solid fa-plus"></i> Tạo Hợp Đồng Mới
+                    <i class="fa-solid fa-plus"></i> Tạo hợp đồng mới
                 </a>
             <?php endif; ?>
         </div>
@@ -43,9 +43,9 @@
     </div>
 
     <!-- Bảng danh sách Hợp đồng -->
-    <div class="card-box margin-top-20" style="background: #fff; border-radius: 12px; overflow: hidden; padding: 0;">
+    <div class="card-box margin-top-20">
         <div class="table-responsive">
-            <table class="table" style="margin: 0;">
+            <table class="table">
                 <thead>
                     <tr style="background: #f8fafc;">
                         <th>Mã HĐ</th>
@@ -86,20 +86,20 @@
                                         <span class="badge badge-secondary"><i class="fa-solid fa-ban"></i> Đã hủy</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="text-center">
+                                <td>
                                     <a href="<?= BASE_URL ?>contract/detail/<?= $c['id'] ?>" class="btn btn-sm btn-outline" title="Xem chi tiết">
                                         <i class="fa-solid fa-eye"></i> Chi tiết
                                     </a>
 
                                     <?php if (Session::get('user_role') === 'admin'): ?>
-                                        <a href="<?= BASE_URL ?>contract/edit/<?= $c['id'] ?>" class="btn btn-sm btn-info" title="Sửa">
+                                        <a href="<?= BASE_URL ?>contract/edit/<?= $c['id'] ?>" class="btn btn-sm btn-outline" title="Sửa">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                         <?php if ($c['status'] === 'Active'): ?>
-                                            <button class="btn btn-sm btn-success btn-renew-contract" data-id="<?= $c['id'] ?>" data-end="<?= $c['end_date'] ?>" title="Gia hạn">
+                                            <button class="btn btn-sm btn-outline btn-renew-contract" data-id="<?= $c['id'] ?>" data-end="<?= $c['end_date'] ?>" title="Gia hạn">
                                                 <i class="fa-solid fa-clock-rotate-left"></i>
                                             </button>
-                                            <a href="<?= BASE_URL ?>contract/cancel/<?= $c['id'] ?>" class="btn btn-sm btn-warning btn-delete-confirm" title="Hủy HĐ">
+                                            <a href="<?= BASE_URL ?>contract/cancel/<?= $c['id'] ?>" class="btn btn-sm btn-danger btn-delete-confirm" title="Hủy HĐ">
                                                 <i class="fa-solid fa-ban"></i>
                                             </a>
                                         <?php endif; ?>
@@ -127,11 +127,39 @@
     <div class="pagination-container margin-top-30 text-center">
         <?php if (!empty($totalPages) && $totalPages > 1): ?>
             <ul class="pagination">
+                <li class="page-item page-nav page-prev <?= ($page <= 1) ? 'disabled' : '' ?>">
+                    <?php if ($page > 1): ?>
+                        <a class="page-link" href="<?= BASE_URL ?>contract/index?page=<?= $page - 1 ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </a>
+                    <?php else: ?>
+                        <span class="page-link disabled">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </span>
+                    <?php endif; ?>
+                </li>
+
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <li class="<?= $i == $page ? 'active' : '' ?>">
-                        <a href="<?= BASE_URL ?>contract/index?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>"><?= $i ?></a>
+                    <li class="page-item page-number <?= $i == $page ? 'active' : '' ?>">
+                        <?php if ($i == $page): ?>
+                            <span class="page-link"><?= $i ?></span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= BASE_URL ?>contract/index?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>"><?= $i ?></a>
+                        <?php endif; ?>
                     </li>
                 <?php endfor; ?>
+
+                <li class="page-item page-nav page-next <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                    <?php if ($page < $totalPages): ?>
+                        <a class="page-link" href="<?= BASE_URL ?>contract/index?page=<?= $page + 1 ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-link disabled">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    <?php endif; ?>
+                </li>
             </ul>
         <?php endif; ?>
     </div>
