@@ -4,13 +4,13 @@
 <main class="page-container container">
     <div class="page-header">
         <div>
-            <h1><i class="fa-solid fa-file-invoice-dollar"></i> Quản Lý Thanh Toán & Hóa Đơn</h1>
-            <p>Thu tiền phòng, tiền điện, tiền nước và quản lý trạng thái thanh toán hàng tháng</p>
+            <h1><i class="fa-solid fa-file-invoice-dollar"></i> Quản lý thanh toán</h1>
+            <p class="text-muted">Thu tiền phòng, tiền điện, tiền nước và theo dõi trạng thái hóa đơn</p>
         </div>
         <div>
             <?php if (Session::has('user_id')): ?>
                 <a href="<?= BASE_URL ?>payment/create" class="btn btn-primary">
-                    <i class="fa-solid fa-plus"></i> Lập Hóa Đơn Mới
+                    <i class="fa-solid fa-plus"></i> Lập hóa đơn mới
                 </a>
             <?php endif; ?>
         </div>
@@ -72,7 +72,7 @@
                                 <td><?= number_format($inv['room_fee'], 0, ',', '.') ?>đ</td>
                                 <td><?= number_format($inv['electricity_fee'], 0, ',', '.') ?>đ</td>
                                 <td><?= number_format($inv['water_fee'], 0, ',', '.') ?>đ</td>
-                                <td><strong class="text-primary" style="font-size: 1.05rem;"><?= number_format($inv['total_amount'], 0, ',', '.') ?> VNĐ</strong></td>
+                                <td><strong class="text-primary"><?= number_format($inv['total_amount'], 0, ',', '.') ?> VNĐ</strong></td>
                                 <td>
                                     <?php if ($inv['status'] === 'Paid'): ?>
                                         <span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã thanh toán</span>
@@ -84,20 +84,15 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="table-actions">
-                                    <a href="<?= BASE_URL ?>payment/detail/<?= $inv['id'] ?>" class="btn btn-sm btn-secondary" title="Xem hóa đơn">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
                                     <?php if (Session::has('user_id')): ?>
                                         <?php if ($inv['status'] === 'Unpaid'): ?>
-                                            <a href="<?= BASE_URL ?>payment/pay/<?= $inv['id'] ?>" class="btn btn-sm btn-success" title="Xác nhận thanh toán">
+                                            <a href="<?= BASE_URL ?>payment/pay/<?= $inv['id'] ?>" class="btn btn-sm btn-outline" title="Xác nhận thanh toán">
                                                 <i class="fa-solid fa-hand-holding-dollar"></i> Thanh toán
                                             </a>
                                         <?php endif; ?>
-                                        <?php if (Session::get('user_role') === 'admin'): ?>
-                                            <a href="<?= BASE_URL ?>payment/delete/<?= $inv['id'] ?>" class="btn btn-sm btn-danger btn-delete-confirm" title="Xóa">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
-                                        <?php endif; ?>
+                                        <a href="<?= BASE_URL ?>payment/delete/<?= $inv['id'] ?>" class="btn btn-sm btn-danger btn-delete-confirm" title="Xóa">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
                                     <?php else: ?>
                                         <span class="text-muted">---</span>
                                     <?php endif; ?>
@@ -116,13 +111,41 @@
 
     <!-- Phân trang Pagination -->
     <div class="pagination-container margin-top-30">
-        <?php if ($totalPages > 1): ?>
+        <?php if (!empty($totalPages) && $totalPages > 1): ?>
             <ul class="pagination">
+                <li class="page-item page-nav page-prev <?= ($page <= 1) ? 'disabled' : '' ?>">
+                    <?php if ($page > 1): ?>
+                        <a class="page-link" href="<?= BASE_URL ?>payment/index?page=<?= $page - 1 ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </a>
+                    <?php else: ?>
+                        <span class="page-link disabled">
+                            <i class="fa-solid fa-arrow-left"></i> Trước
+                        </span>
+                    <?php endif; ?>
+                </li>
+
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <li class="<?= $i == $page ? 'active' : '' ?>">
-                        <a href="<?= BASE_URL ?>payment/index?page=<?= $i ?>&search=<?= urlencode($keyword) ?>&status=<?= urlencode($status) ?>"><?= $i ?></a>
+                    <li class="page-item page-number <?= $i == $page ? 'active' : '' ?>">
+                        <?php if ($i == $page): ?>
+                            <span class="page-link"><?= $i ?></span>
+                        <?php else: ?>
+                            <a class="page-link" href="<?= BASE_URL ?>payment/index?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>"><?= $i ?></a>
+                        <?php endif; ?>
                     </li>
                 <?php endfor; ?>
+
+                <li class="page-item page-nav page-next <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                    <?php if ($page < $totalPages): ?>
+                        <a class="page-link" href="<?= BASE_URL ?>payment/index?page=<?= $page + 1 ?>&search=<?= urlencode($keyword ?? '') ?>&status=<?= urlencode($status ?? '') ?>">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-link disabled">
+                            Sau <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    <?php endif; ?>
+                </li>
             </ul>
         <?php endif; ?>
     </div>
