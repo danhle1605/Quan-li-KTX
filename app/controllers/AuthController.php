@@ -39,6 +39,7 @@ class AuthController extends Controller {
 
             $user = $this->userModel->login($username, $password);
             if ($user) {
+                session_regenerate_id(true);
                 Session::set('user_id', $user['id']);
                 Session::set('user_name', $user['fullname']);
                 Session::set('user_role', $user['role']);
